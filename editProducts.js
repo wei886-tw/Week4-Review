@@ -4,13 +4,14 @@ const url = 'https://vue3-course-api.hexschool.io';
 const api_path = 'wei123';
 
 import pagination from "./pagination.js";
+import modal from "./modal.js";
 
 const { createApp } = Vue;
 const app = createApp({
   data() {
     return {
       allProducts: [],
-      isNew: false,
+      isNew: false, 
       tempProduct: {
         imageUrl: [],
         imagesUrl: [],
@@ -40,13 +41,12 @@ const app = createApp({
         delProductModal.show();
       }
     },
-    getProducts(page = 1) {
-      axios.get(`${url}/v2/api/${api_path}/admin/products?page=${page}`)
+
+    getProducts(pages = 1) {
+      axios.get(`${url}/v2/api/${api_path}/admin/products?page=${pages}`)
         .then(res => {
           this.allProducts = res.data.products;
-          console.log(res.data.pagination)
           this.pages = res.data.pagination
-          console.log(this.pages)
         })
 
         .catch(err => {
@@ -118,6 +118,7 @@ const app = createApp({
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
     axios.defaults.headers.common.Authorization = token;
     this.checkAdmin();
+    console.log(this.tempProduct)
 
     productModal = new bootstrap.Modal(document.getElementById('productModal'), {
       keyboard: false,
@@ -132,9 +133,9 @@ const app = createApp({
 
   components: {
     pagination,
+    modal,
   },
 })
-
 
 
 app.mount('#app');
