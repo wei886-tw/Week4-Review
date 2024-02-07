@@ -1,5 +1,5 @@
 export default {
-    prop: [ "tempProduct", 'updateProduct' ],
+    props: [ "tempProduct", 'updateProduct' ],
     data() {
         return {
             productModal: '',
@@ -18,8 +18,7 @@ export default {
     },
 
     mounted() {
-        productModal = new bootstrap.Modal(document.$refs('productModal'));
-
+        this.productModal = new bootstrap.Modal(this.$refs.productModal);
     },
 
     template: `   <div id="productModal" ref="productModal" class="modal fade" tabindex="-1" aria-labelledby="productModalLabel"

@@ -1,10 +1,9 @@
-let productModal = null;
-let delProductModal = ``;
 const url = 'https://vue3-course-api.hexschool.io';
 const api_path = 'wei123';
 
 import pagination from "./pagination.js";
 import modal from "./modal.js";
+import delProductModal from "./delProductModal.js";
 
 const { createApp } = Vue;
 const app = createApp({
@@ -27,18 +26,18 @@ const app = createApp({
           imagesUrl: [],
         };
         this.isNew = true;
-        productModal.show();
+        this.$refs.pModal.openModal();
       }
 
       else if (status === 'edit') {
         this.tempProduct = { ...product };
         this.new = false;
-        productModal.show();
+        this.$refs.pModal.openModal();
       }
 
       else if (status === 'delete') {
         this.tempProduct = { ...product };
-        delProductModal.show();
+        this.$refs.dModal.openDelProductModal();
       }
     },
 
@@ -55,9 +54,9 @@ const app = createApp({
     },
 
     delProduct() {
-      axios.delete(`${this.url}/v2/api/${this.api_path}/admin/product/${this.tempProduct.id}`)
+      axios.delete(`${url}/v2/api/${api_path}/admin/product/${this.tempProduct.id}`)
         .then(res => {
-          delProductModal.hide();
+          this.$refs.dModal.closeDelProductModal()
           this.getProducts();
         })
         .catch(err => {
@@ -67,9 +66,9 @@ const app = createApp({
 
     updateProduct() {
       if (this.isNew == true) {
-        axios.post(`${this.url}/v2/api/${this.api_path}/admin/product`, { data: this.tempProduct })
+        axios.post(`${url}/v2/api/${api_path}/admin/product`, { data: this.tempProduct })
           .then(res => {
-            productModal.hide();
+            this.$refs.pModal.closeModal();
             alert("新增產品成功");
             this.isNew = false;
             this.tempProduct = {};
@@ -81,9 +80,9 @@ const app = createApp({
           });
       }
       else if (this.isNew == false) {
-        axios.put(`${this.url}/v2/api/${this.api_path}/admin/product/${this.tempProduct.id}`, { data: this.tempProduct })
+        axios.put(`${url}/v2/api/${api_path}/admin/product/${this.tempProduct.id}`, { data: this.tempProduct })
           .then(res => {
-            productModal.hide();
+            this.$refs.pModal.closeModal();
             alert("編輯產品成功");
             this.getProducts();
             this.tempProduct = {};
@@ -118,22 +117,12 @@ const app = createApp({
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
     axios.defaults.headers.common.Authorization = token;
     this.checkAdmin();
-    console.log(this.tempProduct)
-
-    productModal = new bootstrap.Modal(document.getElementById('productModal'), {
-      keyboard: false,
-      backdrop: 'static'
-    });
-
-    delProductModal = new bootstrap.Modal(document.getElementById('delProductModal'), {
-      keyboard: false,
-      backdrop: 'static'
-    });
   },
 
   components: {
     pagination,
     modal,
+    delProductModal,
   },
 })
 

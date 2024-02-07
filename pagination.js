@@ -15,7 +15,7 @@ export default {
           </a>
       </li>
   </ul>
-</nav>
-</div>`,
+</nav>`
+
     
 };
